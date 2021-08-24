@@ -13,13 +13,13 @@ pipeline {
     parameters {
         choice(name: 'TestName', 
                choices: [
-                   'ALL',
+                   'Basic GoPath',
                    'Allocation Mode',
-                   'Allocation Required', 
-                   'Auto GPS-SDL', 
-                   'Basic GoPath', 
-                   'Block IV Non-GPS', 
-                   'Specific Tasks', 
+                   'Allocation Required',
+                   'Auto GPS-SDL',
+                   'Block IV Non-GPS',
+                   'Specific Tasks',
+                   'ALL'
                ], 
                description: 'Select a Testcase to run')
     }
