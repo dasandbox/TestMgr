@@ -39,9 +39,7 @@ pipeline {
                           branches: [[name: '*/main']], 
                           doGenerateSubmoduleConfigurations: false, 
                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'common']], 
-                          submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/dasandbox/cicd-common.git']]
-                          // https://github.com/dasandbox/cicd-common.git
-                          // file:///home/jenkins/gitrepos/cicd-common
+                          submoduleCfg: [], userRemoteConfigs: [[url: 'file:///home/jenkins/gitrepos/cicd-common']]
                          ])
             }
         }
@@ -75,7 +73,6 @@ pipeline {
                 echo "Stage: Test Manager Test"
                 dir('common') {
                     script {
-                        echo "tcname: \'${params.TestName}\'"
                         if ("ALL" == params.TestName) {
                             def cases = readFile("tomahawk-tcid.txt").split("\\r?\\n");
                             cases.each { String testcase_id ->
