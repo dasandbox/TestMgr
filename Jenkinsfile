@@ -3,15 +3,16 @@ pipeline {
 
     options {
         timestamps() // Add timestamps to logging
-        timeout(time: 4, unit: 'HOURS') // Abort pipleine
+        timeout(time: 12, unit: 'HOURS') // Abort pipleine
 
-        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        disableConcurrentBuilds()
     }
     environment {
         PATH = "/usr/local/bin:$PATH"
     }
     parameters {
-        choice(name: 'TestName', 
+        choice(name: 'TestName',
                choices: [
                    'Basic GoPath',
                    'Allocation Mode',
@@ -20,25 +21,25 @@ pipeline {
                    'Block IV Non-GPS',
                    'Specific Tasks',
                    'ALL'
-               ], 
+               ],
                description: 'Select a Testcase to run')
     }
 
     stages {
-        stage("Init") {
+        stage('Init') {
             steps {
                 echo "Stage: Init"
                 echo "branch=${env.BRANCH_NAME}, test=${params.TestName}"
             }
         }
-        stage("Common Config") {
+        stage('Common Config') {
             steps {
                 echo 'Stage: Common Config'
                 // Checkout repo with common config files/scripts to 'common' folder
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/main']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'common']], 
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'common']],
                           submoduleCfg: [], userRemoteConfigs: [[url: 'file:///home/jenkins/gitrepos/cicd-common']]
                          ])
             }
@@ -53,7 +54,7 @@ pipeline {
                 }
             }
         }
-        stage("Get Testcases") {
+        stage('Get Testcases') {
             options {
                 timeout(time: 1, unit: 'MINUTES')
             }
@@ -68,7 +69,7 @@ pipeline {
                 }
             }
         }
-        stage("Test Manager Test") {
+        stage('Test Manager Test') {
             steps {
                 echo "Stage: Test Manager Test"
                 dir('common') {
@@ -91,7 +92,12 @@ pipeline {
                 }
             }
         }
-        stage("Cleanup") {
+        stage('Start Analysis') {
+            steps {
+                build(job: '/AnalysisMgr/main', wait: true)
+            }
+        }
+        stage('Cleanup') {
             steps {
                 echo "Stage: Cleanup"
                 // deleteDir()
