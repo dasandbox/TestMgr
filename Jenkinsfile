@@ -54,6 +54,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Get Testcases') {
             options {
                 timeout(time: 1, unit: 'MINUTES')
@@ -69,9 +70,10 @@ pipeline {
                 }
             }
         }
+        */
         stage('XXX') {
             steps {
-                echo "XXX"
+                echo "Stage: XXX"
                 dir('common') {
                     // Transfer DX data from TTWCS to AM
                     sh '''
@@ -114,9 +116,14 @@ pipeline {
                         idtag=$(cat currentDxFile)
                         echo "Starting Analysis with Analysis idtag=${idtag}"
                         '''
-
-                        // Start Analysis Job
-                        build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
+                        script {
+                            def idtag = sh(script: "cat currentDxFile", returnStdout: true).trim()
+                            echo "idtag=${idtag}"
+                            
+                            //build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
+                            // Start Analysis Job
+                            build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true) 
+                        }
                     }
                 }
             }
