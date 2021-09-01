@@ -89,17 +89,23 @@ pipeline {
                             build(job: '/RunTestcaseId/main', parameters: [string(name: 'testcase_id', value: "${tcid}")], wait: true)
                         }
                         
+                        // Transfer DX data from TTWCS to AM
+                        ./transfer_data_to_am.sh
+                        
+                        // Start Analysis Job
                         build(job: '/AnalysisMgr/main', wait: true)
                     }
                 }
             }
         }
+        /*
         stage('Start Analysis') {
             steps {
                 echo "Stage: Start Analysis"
                 //build(job: '/AnalysisMgr/main', wait: true)
             }
         }
+        */
         stage('Cleanup') {
             steps {
                 echo "Stage: Cleanup"
