@@ -88,13 +88,16 @@ pipeline {
                             echo "tcid: ${tcid}"
                             build(job: '/RunTestcaseId/main', parameters: [string(name: 'testcase_id', value: "${tcid}")], wait: true)
                         }
+                        
+                        build(job: '/AnalysisMgr/main', wait: true)
                     }
                 }
             }
         }
         stage('Start Analysis') {
             steps {
-                build(job: '/AnalysisMgr/main', wait: true)
+                echo "Stage: Start Analysis"
+                //build(job: '/AnalysisMgr/main', wait: true)
             }
         }
         stage('Cleanup') {
