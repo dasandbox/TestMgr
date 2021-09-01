@@ -79,9 +79,9 @@ pipeline {
                     ls -l
                     idtag=$(cat currentDxFile)
                     echo "Starting Analysis with Analysis idtag=${idtag}"
-                    '''
-                    build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
-                }           
+                    '''   
+                }
+                build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)   
             }        
         }
         stage('Test Manager Test') {
