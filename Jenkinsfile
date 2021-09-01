@@ -92,10 +92,12 @@ pipeline {
                         // Transfer DX data from TTWCS to AM
                         sh '''
                         ./transfer_data_to_am.sh
+                        idtag=$(cat currentfile)
+                        echo "idtag=${idtag}"
                         '''
 
                         // Start Analysis Job
-                        build(job: '/AnalysisMgr/main', wait: true)
+                        build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
                     }
                 }
             }
