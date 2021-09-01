@@ -69,26 +69,6 @@ pipeline {
                 }
             }
         }
-/*
-        stage('XXX') {
-            steps {
-                echo "Stage: XXX"
-                dir('common') {
-                    // Transfer DX data from TTWCS to AM
-                    sh '''
-                    ./transfer_data_to_am.sh
-                    cat currentDxFile
-                    ls -l
-                    '''
-                    script {
-                        def idtag = sh(script: "cat currentDxFile", returnStdout: true).trim()
-                        echo "idtag=${idtag}"
-                        build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)  
-                    }
-                }
-            }        
-        }
-*/
         stage('Test Manager Test') {
             steps {
                 echo "Stage: Test Manager Test"
@@ -112,29 +92,19 @@ pipeline {
                         // Transfer DX data from TTWCS to AM
                         sh '''
                         ./transfer_data_to_am.sh
-                        ls -l
-                        cat currentDxFile
                         '''
-                        script {
+                        
+
+
+	script {
                             def idtag = sh(script: "cat currentDxFile", returnStdout: true).trim()
-                            echo "g idtag=${idtag}"
-                            
-                            //build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
-                            // Start Analysis Job
+                            echo "Start Analysis Manager Job with idtag=${idtag}"
                             build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true) 
                         }
                     }
                 }
             }
         }
-        /*
-        stage('Start Analysis') {
-            steps {
-                echo "Stage: Start Analysis"
-                //build(job: '/AnalysisMgr/main', wait: true)
-            }
-        }
-        */
         stage('Cleanup') {
             steps {
                 echo "Stage: Cleanup"
@@ -144,7 +114,7 @@ pipeline {
     post {
         always {
             echo "post/always"
-            //deleteDir() ////////////////////////////////////
+            deleteDir()
         }
         success {
             echo "post/success"
