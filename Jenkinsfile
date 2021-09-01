@@ -77,7 +77,7 @@ pipeline {
                     sh '''
                     ./transfer_data_to_am.sh
                     ls -l
-                    idtag=$(cat ./currentfile)
+                    idtag=$(cat currentFile)
                     echo "Starting Analysis with Analysis idtag=${idtag}"
                     ''' 
                 }           
