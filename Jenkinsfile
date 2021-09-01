@@ -69,6 +69,20 @@ pipeline {
                 }
             }
         }
+        stage('XXX') {
+            steps {
+                echo "Stage: Test Manager Test"
+                dir('common') {
+                    // Transfer DX data from TTWCS to AM
+                    sh '''
+                    ./transfer_data_to_am.sh
+                    ls -l
+                    idtag=$(cat currentfile)
+                    echo "Starting Analysis with Analysis idtag=${idtag}"
+                    ''' 
+                }           
+            }        
+        }
         stage('Test Manager Test') {
             steps {
                 echo "Stage: Test Manager Test"
@@ -92,6 +106,7 @@ pipeline {
                         // Transfer DX data from TTWCS to AM
                         sh '''
                         ./transfer_data_to_am.sh
+                        ls -l
                         idtag=$(cat currentfile)
                         echo "Starting Analysis with Analysis idtag=${idtag}"
                         '''
@@ -113,14 +128,13 @@ pipeline {
         stage('Cleanup') {
             steps {
                 echo "Stage: Cleanup"
-                // deleteDir()
             }
         }
     }
     post {
         always {
             echo "post/always"
-            deleteDir()
+            //deleteDir() ////////////////////////////////////
         }
         success {
             echo "post/success"
