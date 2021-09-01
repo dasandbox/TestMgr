@@ -77,9 +77,10 @@ pipeline {
                     sh '''
                     ./transfer_data_to_am.sh
                     ls -l
-                    idtag=$(cat currentFile)
+                    idtag=$(cat currentDxFile)
                     echo "Starting Analysis with Analysis idtag=${idtag}"
-                    ''' 
+                    '''
+                    build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
                 }           
             }        
         }
@@ -107,7 +108,7 @@ pipeline {
                         sh '''
                         ./transfer_data_to_am.sh
                         ls -l
-                        idtag=$(cat currentfile)
+                        idtag=$(cat currentDxFile)
                         echo "Starting Analysis with Analysis idtag=${idtag}"
                         '''
 
