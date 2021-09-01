@@ -88,10 +88,12 @@ pipeline {
                             echo "tcid: ${tcid}"
                             build(job: '/RunTestcaseId/main', parameters: [string(name: 'testcase_id', value: "${tcid}")], wait: true)
                         }
-                        
+
                         // Transfer DX data from TTWCS to AM
+                        sh '''
                         ./transfer_data_to_am.sh
-                        
+                        '''
+
                         // Start Analysis Job
                         build(job: '/AnalysisMgr/main', wait: true)
                     }
