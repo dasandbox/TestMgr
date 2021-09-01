@@ -54,7 +54,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage('Get Testcases') {
             options {
                 timeout(time: 1, unit: 'MINUTES')
@@ -70,7 +69,7 @@ pipeline {
                 }
             }
         }
-        */
+/*
         stage('XXX') {
             steps {
                 echo "Stage: XXX"
@@ -89,6 +88,7 @@ pipeline {
                 }
             }        
         }
+*/
         stage('Test Manager Test') {
             steps {
                 echo "Stage: Test Manager Test"
@@ -113,12 +113,11 @@ pipeline {
                         sh '''
                         ./transfer_data_to_am.sh
                         ls -l
-                        idtag=$(cat currentDxFile)
-                        echo "Starting Analysis with Analysis idtag=${idtag}"
+                        cat currentDxFile
                         '''
                         script {
                             def idtag = sh(script: "cat currentDxFile", returnStdout: true).trim()
-                            echo "idtag=${idtag}"
+                            echo "g idtag=${idtag}"
                             
                             //build(job: '/AnalysisMgr/main', parameters: [string(name: 'idtag', value: "${idtag}")], wait: true)
                             // Start Analysis Job
